@@ -71,8 +71,6 @@ public class ProductController {
         productRequestDTO.setTitle(productCreateRequestVO.getTitle());
         productRequestDTO.setContent(productCreateRequestVO.getContent());
         productRequestDTO.setCategory(productCreateRequestVO.getCategory());
-        productRequestDTO.setStartAt(productCreateRequestVO.getStartAt());
-        productRequestDTO.setEndAt(productCreateRequestVO.getEndAt());
         productRequestDTO.setStatus(productCreateRequestVO.getStatus());
 
         ProductDTO productResponseDTO = productService.createProduct(productRequestDTO, imageUrl);
