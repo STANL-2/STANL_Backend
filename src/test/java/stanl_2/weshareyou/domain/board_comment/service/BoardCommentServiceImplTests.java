@@ -19,7 +19,6 @@ import java.util.Optional;
 import static org.mockito.ArgumentMatchers.any;  // 수정된 부분
 import static org.mockito.ArgumentMatchers.eq;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest
@@ -71,7 +70,7 @@ class BoardCommentServiceImplTests {
     }
 
     @Test
-    void testDeleteBoardComment_Success() {
+    void 게시글_댓글_삭제() {
         // Given
         Long boardId = 1L;
         Board board = new Board();
