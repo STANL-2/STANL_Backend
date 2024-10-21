@@ -17,7 +17,6 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     @Override
     @Transactional
     public List<ChatRoom> findRoomsByUser(String user) {
-
         return chatRoomRepository.findAll().stream()
                 .filter(room -> (room.getSender() != null && room.getSender().equals(user) && !room.getSenderDelete()) ||
                         (room.getReceiver() != null && room.getReceiver().equals(user) && !room.getReceiverDelete()))
