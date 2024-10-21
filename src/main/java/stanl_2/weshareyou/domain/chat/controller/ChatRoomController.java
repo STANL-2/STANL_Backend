@@ -59,15 +59,15 @@ public class ChatRoomController {
     }
 
     // 새로운 채팅방 생성
-    @PostMapping("")
-    public ChatRoom createRoom(@RequestBody Map<String, String> requestBody){
-        String sender = requestBody.get("sender");
-        String receiver = requestBody.get("receiver");
-        String senderProfileUrl = memberRepository.findProfileUrlByNickname(sender);
-        String receiverProfileUrl = memberRepository.findProfileUrlByNickname(receiver);
-
-        return chatRoomService.createChatRoom(sender, receiver,senderProfileUrl,receiverProfileUrl);
-    }
+//    @PostMapping("")
+//    public ChatRoom createRoom(@RequestBody Map<String, String> requestBody){
+//        String sender = requestBody.get("sender");
+//        String receiver = requestBody.get("receiver");
+//        String senderProfileUrl = memberRepository.findProfileUrlByNickname(sender);
+//        String receiverProfileUrl = memberRepository.findProfileUrlByNickname(receiver);
+//
+//        return chatRoomService.createChatRoom(sender, receiver,senderProfileUrl,receiverProfileUrl);
+//    }
 
     // 선택 채팅방 삭제
     /* 설명. 선택 채팅방 삭제 시 sender, receiver 각각에 delete가 있어야한다*/
