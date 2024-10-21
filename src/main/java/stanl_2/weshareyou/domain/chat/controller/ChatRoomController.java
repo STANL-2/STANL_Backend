@@ -35,7 +35,6 @@ public class ChatRoomController {
         response.put("rooms", rooms);
         response.put("user", nickname);
 
-        System.out.println(response);
         return response; // JSON 데이터 반환
     }
     @GetMapping("/{roomId}")

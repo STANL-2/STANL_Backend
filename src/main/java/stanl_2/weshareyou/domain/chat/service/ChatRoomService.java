@@ -1,64 +1,17 @@
 package stanl_2.weshareyou.domain.chat.service;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import stanl_2.weshareyou.domain.chat.entity.ChatRoom;
-import stanl_2.weshareyou.domain.chat.repository.ChatRoomRepository;
-import stanl_2.weshareyou.domain.member.service.MemberService;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
-@RequiredArgsConstructor
 @Service
-public class ChatRoomService {
+public interface ChatRoomService {
+    List<ChatRoom> findRoomsByUser(String user);
 
-    private final ChatRoomRepository chatRoomRepository;
-    private final MemberService memberService;
+    ChatRoom findRoomById(String roomId);
 
-    public List<ChatRoom> findRoomsByUser(String user) {
+    ChatRoom createChatRoom(String sender, String receiver,String senderProfileUrl,String receiverProfileUrl);
 
-        return chatRoomRepository.findAll().stream()
-                .filter(room -> (room.getSender() != null && room.getSender().equals(user) && !room.getSenderDelete()) ||
-                        (room.getReceiver() != null && room.getReceiver().equals(user) && !room.getReceiverDelete()))
-                .collect(Collectors.toList());
-    }
-
-    public ChatRoom findRoomById(String roomId) {
-        return chatRoomRepository.findByRoomId(roomId); // ID로 채팅방 조회
-    }
-
-    public ChatRoom createChatRoom(String sender, String receiver,String senderProfileUrl,String receiverProfileUrl) {
-
-//        /* 설명. 존재하는 아이디인지 검사 */
-//        if(memberService.findNickname(receiver)) {
-//            ChatRoom chatRoom = ChatRoom.create(sender, receiver);
-//            chatRoomRepository.save(chatRoom); // DB에 저장
-//            return chatRoom;
-//        }
-//
-//        return null;
-
-        ChatRoom chatRoom = ChatRoom.create(sender, receiver,senderProfileUrl,receiverProfileUrl);
-        chatRoomRepository.save(chatRoom); // DB에 저장
-        return chatRoom;
-    }
-
-    @Transactional
-    public boolean deleteChatRoom(String roomId, String nickname) {
-        ChatRoom chatRoom = chatRoomRepository.findByRoomId(roomId);
-
-        /* 설명. sender와 nickname이 같을 때 senderDelete = false */
-        if(chatRoom.getSender().equals(nickname)){
-            chatRoom.setSenderDelete(true);
-        }else{
-            chatRoom.setReceiverDelete(true);
-        }
-
-        chatRoomRepository.save(chatRoom);
-
-        return true;
-    }
+    Boolean deleteChatRoom(String roomId, String nickname);
 }
