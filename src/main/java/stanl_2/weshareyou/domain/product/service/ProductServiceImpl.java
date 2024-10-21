@@ -85,8 +85,8 @@ public class ProductServiceImpl implements ProductService {
         product.setTitle(productDTO.getTitle());
         product.setContent(productDTO.getContent());
         product.setCategory(productDTO.getCategory());
-        product.setStartAt(productDTO.getStartAt());
-        product.setEndAt(productDTO.getEndAt());
+        product.setStartAt(currentTimestamp);
+        product.setEndAt(currentTimestamp);
         product.setStatus(productDTO.getStatus());
         product.setAdminId(member);
         product.setCreatedAt(currentTimestamp);
