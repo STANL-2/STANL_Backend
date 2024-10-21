@@ -19,7 +19,9 @@ public class ChatRoom implements Serializable {
     @Id
     private String id;
     private String roomId;
+    private String senderProfileUrl;
     private String sender;
+    private String receiverProfileUrl;
     private String receiver;
     /* 설명. 참여자가 들어와있는지 여부 컬럼 */
     private Boolean senderActive = false;
@@ -28,12 +30,14 @@ public class ChatRoom implements Serializable {
     private Boolean senderDelete = false;
     private Boolean receiverDelete = false;
 
-    public static ChatRoom create(String sender, String receiver) {
+    public static ChatRoom create(String sender, String receiver,String senderProfileUrl,String receiverProfileUrl) {
         ChatRoom chatRoom = new ChatRoom();
         chatRoom.roomId = UUID.randomUUID().toString();
         /* 설명. 1대1 채팅방 생성*/
         chatRoom.sender = sender;
         chatRoom.receiver = receiver;
+        chatRoom.senderProfileUrl=senderProfileUrl;
+        chatRoom.receiverProfileUrl=receiverProfileUrl;
         return chatRoom;
     }
 

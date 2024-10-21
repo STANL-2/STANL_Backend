@@ -32,8 +32,8 @@ public class ChatRoomServiceImpl implements ChatRoomService{
 
     @Override
     @Transactional
-    public ChatRoom createChatRoom(String sender, String receiver) {
-        ChatRoom chatRoom = ChatRoom.create(sender, receiver);
+    public ChatRoom createChatRoom(String sender, String receiver,String senderProfileUrl,String receiverProfileUrl) {
+        ChatRoom chatRoom = ChatRoom.create(sender, receiver,senderProfileUrl,receiverProfileUrl);
         chatRoomRepository.save(chatRoom); // DB에 저장
         return chatRoom;
     }

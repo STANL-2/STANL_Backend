@@ -31,16 +31,20 @@ class ChatRoomServiceImplTests {
         // given
         String sender = "senderUser";
         String receiver = "receiverUser";
-        ChatRoom chatRoom = ChatRoom.create(sender, receiver);
+        String senderProfileUrl = "senderUrl";
+        String receiverProfileUrl = "receiverUrl";
+        ChatRoom chatRoom = ChatRoom.create(sender, receiver, senderProfileUrl, receiverProfileUrl);
 
         // when
         when(chatRoomRepository.save(any(ChatRoom.class))).thenReturn(chatRoom);
-        ChatRoom result = chatRoomService.createChatRoom(sender, receiver);
+        ChatRoom result = chatRoomService.createChatRoom(sender, receiver, senderProfileUrl, receiverProfileUrl);
 
         // then
         assertNotNull(result);
         assertEquals(sender, result.getSender());
         assertEquals(receiver, result.getReceiver());
+        assertEquals(receiver, result.getSenderProfileUrl());
+        assertEquals(receiver, result.getReceiverProfileUrl());
         verify(chatRoomRepository, times(1)).save(any(ChatRoom.class));
 
     }

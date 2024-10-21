@@ -42,6 +42,5 @@ public interface MemberService {
   
     void saveLoginHistory(HistoryInput historyInput);
 
-    Boolean findNickname(String username);
-
+    MemberDTO findOtherProfile(String nickname);
 }

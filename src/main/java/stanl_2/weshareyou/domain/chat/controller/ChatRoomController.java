@@ -8,6 +8,7 @@ import stanl_2.weshareyou.domain.chat.entity.ChatRoom;
 import stanl_2.weshareyou.domain.chat.entity.ChatRoomMessage;
 import stanl_2.weshareyou.domain.chat.service.ChatRoomMessageService;
 import stanl_2.weshareyou.domain.chat.service.ChatRoomService;
+import stanl_2.weshareyou.domain.member.repository.MemberRepository;
 import stanl_2.weshareyou.global.common.response.ApiResponse;
 
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class ChatRoomController {
 
     private final ChatRoomService chatRoomService;
     private final ChatRoomMessageService chatRoomMessageService;
+    private final MemberRepository memberRepository;
 
     @CrossOrigin(origins = "http://localhost:5173")
     @GetMapping("")
@@ -33,11 +35,12 @@ public class ChatRoomController {
         response.put("rooms", rooms);
         response.put("user", nickname);
 
+        System.out.println(response);
         return response; // JSON 데이터 반환
     }
     @GetMapping("/{roomId}")
     public Map<String, Object> roomDetail(@PathVariable String roomId
-                            ,@RequestAttribute("nickname") String nickname) {
+                                ,@RequestAttribute("nickname") String nickname) {
         ChatRoom room = chatRoomService.findRoomById(roomId);
 
         ChatRoomMessage messages = chatRoomMessageService.getMessagesByRoomId(roomId);
@@ -48,16 +51,22 @@ public class ChatRoomController {
         Map<String, Object> response = new HashMap<>();
         response.put("room", room);
         response.put("messages", messages.getMessages());
+        response.put("nickname", messages.getMessages());
+        response.put("profileUrl", messages.getMessages());
 
+        System.out.println(response);
         return response;
     }
 
     // 새로운 채팅방 생성
     @PostMapping("")
-    public ChatRoom createRoom(@RequestBody Map<String, String> requestBody) {
+    public ChatRoom createRoom(@RequestBody Map<String, String> requestBody){
         String sender = requestBody.get("sender");
         String receiver = requestBody.get("receiver");
-        return chatRoomService.createChatRoom(sender, receiver);
+        String senderProfileUrl = memberRepository.findProfileUrlByNickname(sender);
+        String receiverProfileUrl = memberRepository.findProfileUrlByNickname(receiver);
+
+        return chatRoomService.createChatRoom(sender, receiver,senderProfileUrl,receiverProfileUrl);
     }
 
     // 선택 채팅방 삭제

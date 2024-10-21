@@ -197,6 +197,18 @@ public class MemberController {
     }
 
     /**
+     * 내용: 다른 사람 없이
+     * Response
+     * nickname
+     */
+    @GetMapping("/otherprofile")
+    public ApiResponse<?> findOtherProfile(@RequestParam String nickname){
+        MemberDTO responseMemberDTO = memberService.findOtherProfile(nickname);
+
+        return ApiResponse.ok(responseMemberDTO);
+    }
+
+    /**
      * 내용: 회원 프로필 수정
      * [PUT] localhost:8080/api/v1/member/profile
      * JWT 토큰의 pk 값과 Request Body를 활용한 프로필 수정
@@ -219,7 +231,7 @@ public class MemberController {
     @PutMapping("/profile")
     public ApiResponse<?> updateProfile(@RequestAttribute("id") Long id,
                                         @RequestPart("vo") UpdateProfileRequestVO updateProfileRequestVO,
-                                        @RequestPart("file") MultipartFile profileImage) {
+                                        @RequestPart(value = "file", required = false) MultipartFile profileImage) {
 
         MemberDTO requestMemberDTO = modelMapper.map(updateProfileRequestVO, MemberDTO.class);
         requestMemberDTO.setId(id);

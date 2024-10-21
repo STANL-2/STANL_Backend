@@ -41,10 +41,12 @@ public class BoardCommentController {
         BoardCommentDto boardCommentDto = modelMappper.map(boardCommentCreateRequestVO, BoardCommentDto.class);
         boardCommentDto.setMemberId(id);
         boardCommentDto.setNickname(nickname);
-        boardCommentService.createBoardComment(boardCommentDto);
+        BoardCommentDto boardCommentResponseDTO = boardCommentService.createBoardComment(boardCommentDto);
 
         alarmService.sendCommentAlarm(boardCommentDto);
-        BoardCommentCreateResponseVO boardCommentCreateResponseVO =modelMappper.map(boardCommentDto,BoardCommentCreateResponseVO.class);
+        BoardCommentCreateResponseVO boardCommentCreateResponseVO
+                = modelMappper.map(boardCommentResponseDTO,BoardCommentCreateResponseVO.class);
+
         return ApiResponse.ok(boardCommentCreateResponseVO);
     }
 //    @PostMapping("")
@@ -69,9 +71,9 @@ public class BoardCommentController {
         return ApiResponse.ok(boardCommentUpdateResponseVO);
     }
 
-    @DeleteMapping("/{boardId}")
-    public ApiResponse<?> updateBoardComment(@PathVariable("boardId") Long boardId){
-        boardCommentService.deleteBoardComment(boardId);
+    @DeleteMapping("/{boardCommentId}")
+    public ApiResponse<?> deleteBoardComment(@PathVariable("boardCommentId") Long boardCommentId){
+        boardCommentService.deleteBoardComment(boardCommentId);
         return ApiResponse.ok("삭제 성공");
     }
 
