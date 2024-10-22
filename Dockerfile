@@ -9,3 +9,4 @@ ENTRYPOINT ["java", "-jar", "/app.jar"]
 
 # Expose 포트
 EXPOSE 8080
+
