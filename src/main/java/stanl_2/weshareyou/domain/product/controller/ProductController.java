@@ -379,6 +379,7 @@ public class ProductController {
         productRequestDTO.setAdminId(adminId);
         ProductDTO productResponseDTO = productService.updateRentalApproveProduct(productRequestDTO);
 
+        
         ProductRentalApproveResponseVO productRentalApproveResponseVO = modelMapper.map(productResponseDTO, ProductRentalApproveResponseVO.class);
 
         return ApiResponse.ok(productRentalApproveResponseVO);
