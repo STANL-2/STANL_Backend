@@ -63,6 +63,9 @@ public class BoardCommentServiceImpl implements BoardCommentService{
 
         BoardCommentDto boardCommentDto1 = modelMapper.map(boardComment, BoardCommentDto.class);
         boardCommentDto1.setBoardCommentId(board.getId());
+        boardCommentDto1.setNickname(member.getNickname());
+        boardCommentDto1.setBoardId(board.getId());
+
 
         return boardCommentDto1;
     }
@@ -102,8 +105,9 @@ public class BoardCommentServiceImpl implements BoardCommentService{
             BoardCommentDto boardCommentDto = new BoardCommentDto();
             boardCommentDto.setBoardCommentId(boardComment.getId());
             boardCommentDto.setContent(boardComment.getContent());
+            boardCommentDto.setMemberProfileUrl(boardComment.getMember().getProfileUrl());
 
-            if (boardComment.getMember() != null) {
+                    if (boardComment.getMember() != null) {
                 boardCommentDto.setNickname(boardComment.getMember().getNickname()); // Member의 닉네임 추가
             } else {
                 boardCommentDto.setNickname("Unknown");

@@ -14,6 +14,12 @@ import java.util.List;
 public class BoardSummaryVO {
 
     @NotNull
+    private Long id;
+
+    @NotNull
+    private String content;
+
+    @NotNull
     private String memberProfileUrl;
 
     @NotNull
@@ -30,4 +36,10 @@ public class BoardSummaryVO {
 
     @NotNull
     private Integer likesCount;
+
+    @NotNull
+    private Integer memberId;
+
+    @NotNull
+    private Boolean active;
 }

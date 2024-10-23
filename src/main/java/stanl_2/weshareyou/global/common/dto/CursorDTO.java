@@ -12,7 +12,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CursorDTO<T> {
 
-    private Long id;
     private TAG tag;
     private ProductCategory category;
     private Long cursorId;

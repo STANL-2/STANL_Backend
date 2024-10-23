@@ -175,13 +175,27 @@ public class MemberServiceImpl implements MemberService {
         member.setLanguage(requestMemberDTO.getLanguage());
         member.setUpdatedAt(currentTimestamp);
 
+
+        // 프로필 이미지을 변경하지 않는 경우
+        if(file == null){
+            memberRepository.save(member);
+            MemberDTO responseMemberDTO = modelMapper.map(member, MemberDTO.class);
+
+            // 보안상 null
+            responseMemberDTO.setId(null);
+            responseMemberDTO.setPassword(null);
+            responseMemberDTO.setActive(null);
+
+            return responseMemberDTO;
+        }
+
         // s3 이미지 저장
         if(member.getProfileUrl() == null || member.getProfileUrl().isEmpty()){
-            // 프로필 이미지 없는 경우
+            // 기존 프로필 이미지 없는 경우
             String url = s3uploader.uploadOneImage(file);
             member.setProfileUrl(url);
         }else{
-            // 프로필 이미지 있는 경우
+            // 기존 프로필 이미지 있는 경우
             String key = member.getProfileUrl();
             if(key == null){
                 throw new CommonException(ErrorCode.BAD_REQUEST_IMAGE);
@@ -437,10 +451,19 @@ public class MemberServiceImpl implements MemberService {
     }
     @Override
     @Transactional
-    public Boolean findNickname(String username){
-        memberRepository.findByNickname(username).orElseThrow(() -> new CommonException(ErrorCode.MEMBER_NOT_FOUND));
 
-        return true;
+    public MemberDTO findOtherProfile(String nickname) {
+        log.info(nickname);
+        Member otherMember = memberRepository.findByNickname(nickname)
+                .orElseThrow(() -> new CommonException(ErrorCode.MEMBER_NOT_FOUND));
+        MemberDTO responseMemberDTO = modelMapper.map(otherMember, MemberDTO.class);
+
+        // 보안상 null
+        responseMemberDTO.setId(null);
+        responseMemberDTO.setPassword(null);
+        responseMemberDTO.setActive(null);
+        return responseMemberDTO;
+
     }
 
 }

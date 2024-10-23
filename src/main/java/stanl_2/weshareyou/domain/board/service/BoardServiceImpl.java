@@ -213,6 +213,8 @@ public class BoardServiceImpl implements BoardService{
         boardResponseDTO.setMemberProfileUrl(board.getMember().getProfileUrl());
         boardResponseDTO.setMemberNickname(board.getMember().getNickname());
         boardResponseDTO.setComment(boardCommentDTOs);
+        boardResponseDTO.setMemberId(boardDTO.getMemberId());
+        boardResponseDTO.setTitle(board.getTitle());
 
         return boardResponseDTO;
     }
@@ -249,12 +251,17 @@ public class BoardServiceImpl implements BoardService{
                     }
 
                     BoardDTO boardDTO = new BoardDTO();
+                    boardDTO.setId(board.getId());
                     boardDTO.setMemberProfileUrl(board.getMember().getProfileUrl());
                     boardDTO.setMemberNickname(board.getMember().getNickname());
                     boardDTO.setImageObj(imageObj);
                     boardDTO.setTitle(board.getTitle());
+                    boardDTO.setContent(board.getContent());
+
                     boardDTO.setLikesCount(board.getLikesCount());
                     boardDTO.setCommentCount(board.getCommentCount());
+                    boardDTO.setMemberId(board.getMember().getId());
+                    boardDTO.setActive(board.getActive());
                     return boardDTO;
                 })
                 .collect(Collectors.toList());

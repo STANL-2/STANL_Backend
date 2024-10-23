@@ -17,5 +17,5 @@ public class BoardCommentDto {
         private Timestamp createdAt;
         private Timestamp updatedAt;
 
-
+        private String memberProfileUrl;
 }

@@ -3,6 +3,8 @@ package stanl_2.weshareyou.domain.product.aggregate.vo.response;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
+import java.sql.Timestamp;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -18,4 +20,10 @@ public class ProductRentalResponseVO {
 
     @NotNull
     private Boolean rental;
+
+    @NotNull
+    Timestamp startAt;
+
+    @NotNull
+    Timestamp endAt;
 }

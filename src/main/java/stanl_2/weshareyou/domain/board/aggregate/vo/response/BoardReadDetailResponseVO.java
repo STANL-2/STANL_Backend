@@ -15,6 +15,9 @@ import java.util.List;
 public class BoardReadDetailResponseVO {
 
     @NotNull
+    private Integer memberId;
+
+    @NotNull
     private List<BoardImage> imageObj;
 
     @NotNull
@@ -31,5 +34,8 @@ public class BoardReadDetailResponseVO {
 
     @NotNull
     private List<BoardCommentDto> comment;
+
+    @NotNull
+    private String title;
 
 }

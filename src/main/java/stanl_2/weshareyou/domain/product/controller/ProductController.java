@@ -10,6 +10,7 @@ import stanl_2.weshareyou.domain.product.aggregate.dto.ProductDTO;
 import stanl_2.weshareyou.domain.product.aggregate.entity.ProductCategory;
 import stanl_2.weshareyou.domain.product.aggregate.vo.request.ProductCreateRequestVO;
 import stanl_2.weshareyou.domain.product.aggregate.vo.request.ProductDeleteRequestVO;
+import stanl_2.weshareyou.domain.product.aggregate.vo.request.ProductRentalRequestVO;
 import stanl_2.weshareyou.domain.product.aggregate.vo.request.ProductUpdateRequestVO;
 import stanl_2.weshareyou.domain.product.aggregate.vo.response.*;
 import stanl_2.weshareyou.domain.product.service.ProductService;
@@ -70,8 +71,6 @@ public class ProductController {
         productRequestDTO.setTitle(productCreateRequestVO.getTitle());
         productRequestDTO.setContent(productCreateRequestVO.getContent());
         productRequestDTO.setCategory(productCreateRequestVO.getCategory());
-        productRequestDTO.setStartAt(productCreateRequestVO.getStartAt());
-        productRequestDTO.setEndAt(productCreateRequestVO.getEndAt());
         productRequestDTO.setStatus(productCreateRequestVO.getStatus());
 
         ProductDTO productResponseDTO = productService.createProduct(productRequestDTO, imageUrl);
@@ -291,7 +290,7 @@ public class ProductController {
      *                 "adminId": 1,
      *                 "memberId": null
      *             }
-     *         ],
+ z    *         ],
      *         "hasNext": false
      *     },
      *     "error": null
@@ -321,32 +320,33 @@ public class ProductController {
     /**
      * 내용: 공유물품 대여신청
      * req: localhost:8080/api/v1/product/share/1?memberId=2
+     * {
+     *     "startAt": "2024-10-08T03:00:00.000+00:00",
+     *     "endAt": "2024-10-09T03:00:00.000+00:00"
+     * }
      * res:
      * {
      *     "success": true,
      *     "result": {
-     *         "id": 1,
-     *         "memberId": 2,
-     *         "rental": false
+     *         "id": 12,
+     *         "memberId": 5,
+     *         "rental": true,
+     *         "startAt": "2024-10-08T03:00:00.000+00:00",
+     *         "endAt": "2024-10-09T03:00:00.000+00:00"
      *     },
      *     "error": null
-     * }
-     * {
-     *     "success": false,
-     *     "result": null,
-     *     "error": {
-     *         "code": 40010,
-     *         "message": "이미 대여된 물품입니다."
-     *     }
      * }
      */
     @PutMapping("/share/{productId}")
     public ApiResponse<?> updateRentalProduct(@PathVariable Long productId,
+                                              @RequestBody ProductRentalRequestVO productRentalRequestVO,
                                               @RequestAttribute("id") Long id) {
 
         ProductDTO productRequestDTO = new ProductDTO();
         productRequestDTO.setId(productId);
         productRequestDTO.setMemberId(id);
+        productRequestDTO.setStartAt(productRentalRequestVO.getStartAt());
+        productRequestDTO.setEndAt(productRentalRequestVO.getEndAt());
         ProductDTO productResponseDTO = productService.updateRentalProduct(productRequestDTO);
 
         alarmService.sendRentalAlarm(productResponseDTO);

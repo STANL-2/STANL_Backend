@@ -25,7 +25,9 @@ public class ChatRoomMessage {
     public static class Message {
         private String sender;
         private String message;
+        /* 설명. 읽음여부 */
         private Boolean readYn;
+        /* 설명. 보낸시각 */
         private Timestamp createdAt;
     }
 }

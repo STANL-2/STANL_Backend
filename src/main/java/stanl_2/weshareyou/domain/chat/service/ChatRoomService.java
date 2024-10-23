@@ -11,7 +11,7 @@ public interface ChatRoomService {
 
     ChatRoom findRoomById(String roomId);
 
-    ChatRoom createChatRoom(String sender, String receiver);
+    ChatRoom createChatRoom(String sender, String receiver,String senderProfileUrl,String receiverProfileUrl);
 
     Boolean deleteChatRoom(String roomId, String nickname);
 }
