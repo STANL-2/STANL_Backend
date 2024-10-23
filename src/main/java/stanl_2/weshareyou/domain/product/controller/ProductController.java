@@ -71,6 +71,8 @@ public class ProductController {
         productRequestDTO.setTitle(productCreateRequestVO.getTitle());
         productRequestDTO.setContent(productCreateRequestVO.getContent());
         productRequestDTO.setCategory(productCreateRequestVO.getCategory());
+        productRequestDTO.setStartAt(productCreateRequestVO.getStartAt());
+        productRequestDTO.setEndAt(productCreateRequestVO.getEndAt());
         productRequestDTO.setStatus(productCreateRequestVO.getStatus());
 
         ProductDTO productResponseDTO = productService.createProduct(productRequestDTO, imageUrl);
@@ -155,68 +157,6 @@ public class ProductController {
     }
 
     /**
-     * 내용: 공유물품 전체 조회
-     * req: localhost:8080/api/v1/product?cursor=3&size=3
-     * res:
-     * {
-     *     "success": true,
-     *     "result": {
-     *         "cursorId": 2,
-     *         "contents": [
-     *             {
-     *                 "id": 1,
-     *                 "title": "Tent",
-     *                 "content": "A two-person tent for camping.",
-     *                 "imageUrl": "tent_image_url",
-     *                 "category": {},
-     *                 "startAt": "2024-09-30T15:00:00.000+00:00",
-     *                 "endAt": "2024-10-31T15:00:00.000+00:00",
-     *                 "rental": false,
-     *                 "createdAt": "2024-10-08T03:00:00.000+00:00",
-     *                 "updatedAt": "2024-10-08T03:00:00.000+00:00",
-     *                 "adminId": 1,
-     *                 "memberId": null
-     *             },
-     *             {
-     *                 "id": 2,
-     *                 "title": "Winter Jacket",
-     *                 "content": "A warm winter jacket.",
-     *                 "imageUrl": "jacket_image_url",
-     *                 "category": {},
-     *                 "startAt": "2024-09-30T15:00:00.000+00:00",
-     *                 "endAt": "2024-10-31T15:00:00.000+00:00",
-     *                 "rental": false,
-     *                 "createdAt": "2024-10-08T03:00:00.000+00:00",
-     *                 "updatedAt": "2024-10-08T03:00:00.000+00:00",
-     *                 "adminId": 1,
-     *                 "memberId": null
-     *             }
-     *         ],
-     *         "hasNext": false
-     *     },
-     *     "error": null
-     * }
-     */
-    // 나중에 삭제예정
-//    @GetMapping("")
-//    public ApiResponse<?> readAllProductList(@RequestParam(value = "cursor", required = false) Long cursorId,
-//                                             @RequestParam(value ="size", defaultValue = "4") Integer size) {
-//
-//        CursorDTO cursorDTO = new CursorDTO();
-//        cursorDTO.setCursorId(cursorId);
-//        cursorDTO.setSize(size);
-//
-//        CursorDTO responsCursorDTO = productService.readAllProductList(cursorDTO);
-//
-//        ProductReadAllResponseVO productReadAllResponseVO = new ProductReadAllResponseVO();
-//        productReadAllResponseVO.setCursorId(responsCursorDTO.getCursorId());
-//        productReadAllResponseVO.setContents(responsCursorDTO.getComment());
-//        productReadAllResponseVO.setHasNext(responsCursorDTO.isHasNext());
-//
-//        return ApiResponse.ok(productReadAllResponseVO);
-//    }
-
-    /**
      * 내용: 공유물품 상세 조회
      * req: localhost:8080/api/v1/product/6
      * res:
@@ -290,7 +230,7 @@ public class ProductController {
      *                 "adminId": 1,
      *                 "memberId": null
      *             }
- z    *         ],
+     z    *         ],
      *         "hasNext": false
      *     },
      *     "error": null
