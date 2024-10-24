@@ -1,6 +1,7 @@
 package stanl_2.weshareyou.domain.board.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -69,9 +70,8 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     public BoardDTO createBoard(BoardDTO boardDTO) {
         Timestamp currentTimestamp = getCurrentTimestamp();
-        Long memberId = boardDTO.getMemberId();
 
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findById(boardDTO.getMemberId())
                 .orElseThrow(() -> new CommonException(ErrorCode.MEMBER_NOT_FOUND));
 
         Board board = new Board();
@@ -87,27 +87,17 @@ public class BoardServiceImpl implements BoardService{
 
         boardRepository.save(board);
 
-        List<BoardImage> images = s3uploader.uploadImg(boardDTO.getFile());
-
-        for(BoardImage image: images){
-            image.setBoard(board);
-            boardImageRepository.save(image);
-        }
-
-        List<BoardImage> savedImages = boardImageRepository.findAllByBoardId(board.getId());
-
-        List<BoardImageDTO> imageObj = new ArrayList<>();
-
-        for (BoardImage image : savedImages) {
-            BoardImageDTO imageDTO = new BoardImageDTO(image.getId(), image.getImageUrl(), image.getName());
-            imageObj.add(imageDTO);
-        }
+        List<MultipartFile> files = boardDTO.getFile();
 
         BoardDTO boardResponseDTO = new BoardDTO();
-        boardResponseDTO.setImageObj(imageObj);
         boardResponseDTO.setTitle(board.getTitle());
         boardResponseDTO.setContent(board.getContent());
         boardResponseDTO.setTag(board.getTag());
+
+        if(files != null && !files.isEmpty()) {
+            List<BoardImageDTO> imageObj = uploadImages(boardDTO, board);
+            boardResponseDTO.setImageObj(imageObj);
+        }
 
         return boardResponseDTO;
     }
@@ -137,28 +127,13 @@ public class BoardServiceImpl implements BoardService{
 
         List<MultipartFile> files = boardDTO.getFile();
 
-        List<BoardImageDTO> imageObj = new ArrayList<>();
+        BoardDTO boardResponseDTO = modelMapper.map(board, BoardDTO.class);
 
         // 추가할 이미지 처리 (여러 개 추가 기능)
         if(files != null && !files.isEmpty()) {
-
-            List<BoardImage> images = s3uploader.uploadImg(files);
-
-            for(BoardImage image: images){
-                image.setBoard(board);
-                boardImageRepository.save(image);
-            }
-
-            List<BoardImage> savedImages = boardImageRepository.findAllByBoardId(board.getId());
-
-            for (BoardImage image : savedImages) {
-                BoardImageDTO imageDTO = new BoardImageDTO(image.getId(), image.getImageUrl(), image.getName());
-                imageObj.add(imageDTO);
-            }
+            List<BoardImageDTO> imageObj = uploadImages(boardDTO, board);
+            boardResponseDTO.setImageObj(imageObj);
         }
-
-        BoardDTO boardResponseDTO = modelMapper.map(board, BoardDTO.class);
-        boardResponseDTO.setImageObj(imageObj);
 
         return boardResponseDTO;
     }
@@ -273,5 +248,25 @@ public class BoardServiceImpl implements BoardService{
         cursorResponseDTO.setComment(boardDTOList);
 
         return cursorResponseDTO;
+    }
+
+    private List<BoardImageDTO> uploadImages(BoardDTO boardDTO, Board board) {
+        List<BoardImage> images = s3uploader.uploadImg(boardDTO.getFile());
+
+        for (BoardImage image : images) {
+            image.setBoard(board);
+            boardImageRepository.save(image);
+        }
+
+        List<BoardImage> savedImages = boardImageRepository.findAllByBoardId(board.getId());
+
+        List<BoardImageDTO> imageObj = new ArrayList<>();
+
+        for (BoardImage image : savedImages) {
+            BoardImageDTO imageDTO = new BoardImageDTO(image.getId(), image.getImageUrl(), image.getName());
+            imageObj.add(imageDTO);
+        }
+
+        return imageObj;
     }
 }
