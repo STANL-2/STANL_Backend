@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import stanl_2.weshareyou.domain.board.aggregate.dto.BoardDTO;
@@ -41,8 +42,6 @@ public class BoardController {
         BoardDTO boardDTO = modelMapper.map(boardCreateRequestVO, BoardDTO.class);
         boardDTO.setMemberId(memberId);
 
-        log.info("값 출력: {}", files);
-
         if(files != null) {
             List<MultipartFile> fileList = new ArrayList<>(files);
             boardDTO.setFile(fileList);
@@ -61,8 +60,8 @@ public class BoardController {
     @PutMapping("")
     public ApiResponse<?> updateBoard(@RequestAttribute("id") Long memberId,
                                       @RequestPart("vo") BoardUpdateRequestVO boardUpdateRequestVO,
-                                      @RequestPart("newFiles") List<MultipartFile> files,
-                                      @RequestPart("deletedFileIds") List<Long> deleteIds) {
+                                      @RequestPart("newFiles") @Nullable List<MultipartFile> files,
+                                      @RequestPart("deletedFileIds") @Nullable List<Long> deleteIds) {
 
         BoardDTO boardDTO = modelMapper.map(boardUpdateRequestVO, BoardDTO.class);
 

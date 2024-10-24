@@ -87,15 +87,15 @@ public class BoardServiceImpl implements BoardService{
 
         boardRepository.save(board);
 
-        List<MultipartFile> files = boardDTO.getFile();
-
         BoardDTO boardResponseDTO = new BoardDTO();
         boardResponseDTO.setTitle(board.getTitle());
         boardResponseDTO.setContent(board.getContent());
         boardResponseDTO.setTag(board.getTag());
 
+        List<MultipartFile> files = boardDTO.getFile();
+
         if(files != null && !files.isEmpty()) {
-            List<BoardImageDTO> imageObj = uploadImages(boardDTO, board);
+            List<BoardImageDTO> imageObj = boardImageService.uploadImages(files, board);
             boardResponseDTO.setImageObj(imageObj);
         }
 
@@ -110,7 +110,6 @@ public class BoardServiceImpl implements BoardService{
 
         List<Long> deletedFileIds = boardDTO.getDeleteIds();
 
-        // 삭제할 이미지 처리 (여러 개 삭제 가능)
         if (deletedFileIds != null && !deletedFileIds.isEmpty()) {
             boardImageService.updateImages(deletedFileIds);
         }
@@ -125,13 +124,12 @@ public class BoardServiceImpl implements BoardService{
 
         boardRepository.save(board);
 
-        List<MultipartFile> files = boardDTO.getFile();
-
         BoardDTO boardResponseDTO = modelMapper.map(board, BoardDTO.class);
 
-        // 추가할 이미지 처리 (여러 개 추가 기능)
+        List<MultipartFile> files = boardDTO.getFile();
+
         if(files != null && !files.isEmpty()) {
-            List<BoardImageDTO> imageObj = uploadImages(boardDTO, board);
+            List<BoardImageDTO> imageObj = boardImageService.uploadImages(files, board);
             boardResponseDTO.setImageObj(imageObj);
         }
 
@@ -248,25 +246,5 @@ public class BoardServiceImpl implements BoardService{
         cursorResponseDTO.setComment(boardDTOList);
 
         return cursorResponseDTO;
-    }
-
-    private List<BoardImageDTO> uploadImages(BoardDTO boardDTO, Board board) {
-        List<BoardImage> images = s3uploader.uploadImg(boardDTO.getFile());
-
-        for (BoardImage image : images) {
-            image.setBoard(board);
-            boardImageRepository.save(image);
-        }
-
-        List<BoardImage> savedImages = boardImageRepository.findAllByBoardId(board.getId());
-
-        List<BoardImageDTO> imageObj = new ArrayList<>();
-
-        for (BoardImage image : savedImages) {
-            BoardImageDTO imageDTO = new BoardImageDTO(image.getId(), image.getImageUrl(), image.getName());
-            imageObj.add(imageDTO);
-        }
-
-        return imageObj;
     }
 }
