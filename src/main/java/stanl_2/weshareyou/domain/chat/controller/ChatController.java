@@ -24,6 +24,7 @@ public class ChatController {
     public void sendMessage(ChatMessage message, @DestinationVariable String roomId) {
         try {
             chatRoomMessageService.addMessageToRoom(message.getRoomId(), message.getSender(), message.getMessage());
+            // 구독 경로를 하나 더 추가하면 알림에 뜨게 할 수 있을 듯?
             messagingTemplate.convertAndSend("/sub/" + roomId, message);
         } catch (Exception e) {
             e.printStackTrace();

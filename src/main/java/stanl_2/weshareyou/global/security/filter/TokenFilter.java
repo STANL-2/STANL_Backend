@@ -79,6 +79,7 @@ public class TokenFilter extends OncePerRequestFilter {
                 path.equals("/api/v1/member/register") ||
                 path.startsWith("/api/v1/member/sms") ||  // 와일드카드 경로 포함
                 path.startsWith("/api/v1/member/mail") ||
+                path.equals("/api/v1/member") ||
                 path.equals("/api/v1/member/password") ||
                 path.startsWith("/ws");
     }

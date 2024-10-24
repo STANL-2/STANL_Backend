@@ -35,7 +35,6 @@ public class ChatRoomController {
         response.put("rooms", rooms);
         response.put("user", nickname);
 
-        System.out.println(response);
         return response; // JSON 데이터 반환
     }
     @GetMapping("/{roomId}")
@@ -47,14 +46,12 @@ public class ChatRoomController {
 
         chatRoomMessageService.markMessagesAsRead(roomId, nickname);
 
-
         Map<String, Object> response = new HashMap<>();
         response.put("room", room);
         response.put("messages", messages.getMessages());
         response.put("nickname", messages.getMessages());
         response.put("profileUrl", messages.getMessages());
 
-        System.out.println(response);
         return response;
     }
 
@@ -70,7 +67,7 @@ public class ChatRoomController {
     }
 
     // 선택 채팅방 삭제
-    /* 설명. 선택 채팅방 삭제 시 sender, receiver 각각에 delete가 있어야한다*/
+    /* 설명. 선택 채팅방 삭제 시 sender, receiver 각각에 delete가 있어야한다(soft delete)*/
     @DeleteMapping("/{roomId}")
     public ApiResponse<?> deleteRoom(@PathVariable String roomId
                               , @RequestAttribute("nickname") String nickname) {
