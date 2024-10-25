@@ -50,13 +50,13 @@ dependencies {
 	implementation 'me.paulschwarz:spring-dotenv:3.0.0'
 
 	//sockjs
-//	implementation 'org.webjars:sockjs-client:1.5.1'
+	implementation 'org.webjars:sockjs-client:1.5.1'
 
 	//stomp
-//	implementation 'org.webjars:stomp-websocket:2.3.4'
-//	implementation 'org.webjars.bower:bootstrap:4.3.1'
+	implementation 'org.webjars:stomp-websocket:2.3.4'
+	implementation 'org.webjars.bower:bootstrap:4.3.1'
 	implementation 'org.webjars.bower:axios:0.17.1'
-//	implementation 'org.webjars:sockjs-client:1.5.1'
+	implementation 'org.webjars:sockjs-client:1.5.1'
 
 	//swagger
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'

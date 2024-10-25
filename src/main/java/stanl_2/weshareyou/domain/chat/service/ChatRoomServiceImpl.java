@@ -26,7 +26,7 @@ public class ChatRoomServiceImpl implements ChatRoomService{
     @Override
     @Transactional
     public ChatRoom findRoomById(String roomId) {
-        return chatRoomRepository.findByRoomId(roomId); // ID로 채팅방 조회
+        return chatRoomRepository.findByRoomId(roomId);
     }
 
     @Override
