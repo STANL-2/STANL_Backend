@@ -29,7 +29,7 @@ public class ChatController {
 
             //알림 메시지 전송
             ChatMessage notificationMessage = createNotificationMessage(message);
-            messagingTemplate.convertAndSend("/sub/notifications/" + roomId, notificationMessage);
+            messagingTemplate.convertAndSend("/sub/notification/" + roomId, notificationMessage);
 
         } catch (Exception e) {
             e.printStackTrace();
