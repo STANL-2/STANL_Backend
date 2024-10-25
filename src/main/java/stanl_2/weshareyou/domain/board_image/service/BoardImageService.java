@@ -14,4 +14,6 @@ public interface BoardImageService {
     void deleteImages(Board board);
 
     List<BoardImageDTO> uploadImages(List<MultipartFile> files, Board board);
+
+    List<BoardImageDTO> readImages(Board board);
 }

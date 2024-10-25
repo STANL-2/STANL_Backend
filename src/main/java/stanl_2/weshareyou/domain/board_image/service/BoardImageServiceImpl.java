@@ -10,6 +10,8 @@ import stanl_2.weshareyou.domain.board_image.aggregate.dto.BoardImageDTO;
 import stanl_2.weshareyou.domain.board_image.aggregate.entity.BoardImage;
 import stanl_2.weshareyou.domain.board_image.repository.BoardImageRepository;
 import stanl_2.weshareyou.domain.s3.S3uploader;
+import stanl_2.weshareyou.global.common.exception.CommonException;
+import stanl_2.weshareyou.global.common.exception.ErrorCode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +51,25 @@ public class BoardImageServiceImpl implements BoardImageService{
         }
 
         return imageObj;
+    }
+
+    @Override
+    @Transactional
+    public List<BoardImageDTO> readImages(Board board) {
+
+        List<BoardImage> savedImages = boardImageRepository.findAllByBoardId(board.getId());
+
+        if(savedImages.isEmpty()){
+            return null;
+        } else{
+            List<BoardImageDTO> imageObj = new ArrayList<>();
+
+            for (BoardImage image : savedImages) {
+                BoardImageDTO imageDTO = new BoardImageDTO(image.getId(), image.getImageUrl(), image.getName());
+                imageObj.add(imageDTO);
+            }
+            return imageObj;
+        }
     }
 
     @Override

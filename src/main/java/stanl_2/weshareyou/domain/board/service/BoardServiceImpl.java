@@ -44,7 +44,6 @@ public class BoardServiceImpl implements BoardService{
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
     private final BoardCommentRepository boardCommentRepository;
-    private final S3uploader s3uploader;
     private final BoardImageRepository boardImageRepository;
     private final BoardImageService boardImageService;
     private Timestamp getCurrentTimestamp() {
@@ -55,13 +54,11 @@ public class BoardServiceImpl implements BoardService{
     @Autowired
     public BoardServiceImpl(BoardRepository boardRepository, ModelMapper modelMapper,
                             MemberRepository memberRepository, BoardCommentRepository boardCommentRepository,
-                            S3uploader s3uploader, BoardImageRepository boardImageRepository,
-                            BoardImageService boardImageService) {
+                            BoardImageRepository boardImageRepository, BoardImageService boardImageService) {
         this.boardRepository = boardRepository;
         this.modelMapper = modelMapper;
         this.memberRepository = memberRepository;
         this.boardCommentRepository = boardCommentRepository;
-        this.s3uploader = s3uploader;
         this.boardImageRepository = boardImageRepository;
         this.boardImageService = boardImageService;
     }
@@ -130,6 +127,14 @@ public class BoardServiceImpl implements BoardService{
 
         if(files != null && !files.isEmpty()) {
             List<BoardImageDTO> imageObj = boardImageService.uploadImages(files, board);
+            boardResponseDTO.setImageObj(imageObj);
+        } else {
+            List<BoardImageDTO> imageObj = boardImageService.readImages(board);
+
+            if(imageObj == null || imageObj.isEmpty()){
+                throw new CommonException(ErrorCode.IMAGE_NOT_FOUND);
+            }
+
             boardResponseDTO.setImageObj(imageObj);
         }
 
