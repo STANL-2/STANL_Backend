@@ -55,25 +55,6 @@ public class BoardImageServiceImpl implements BoardImageService{
 
     @Override
     @Transactional
-    public List<BoardImageDTO> readImages(Board board) {
-
-        List<BoardImage> savedImages = boardImageRepository.findAllByBoardId(board.getId());
-
-        if(savedImages.isEmpty()){
-            return null;
-        } else{
-            List<BoardImageDTO> imageObj = new ArrayList<>();
-
-            for (BoardImage image : savedImages) {
-                BoardImageDTO imageDTO = new BoardImageDTO(image.getId(), image.getImageUrl(), image.getName());
-                imageObj.add(imageDTO);
-            }
-            return imageObj;
-        }
-    }
-
-    @Override
-    @Transactional
     public void updateImages(List<Long> deletedFileIds) {
 
         List<BoardImage> imagesToDelete = boardImageRepository.findAllById(deletedFileIds);

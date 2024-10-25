@@ -128,14 +128,6 @@ public class BoardServiceImpl implements BoardService{
         if(files != null && !files.isEmpty()) {
             List<BoardImageDTO> imageObj = boardImageService.uploadImages(files, board);
             boardResponseDTO.setImageObj(imageObj);
-        } else {
-            List<BoardImageDTO> imageObj = boardImageService.readImages(board);
-
-            if(imageObj == null || imageObj.isEmpty()){
-                throw new CommonException(ErrorCode.IMAGE_NOT_FOUND);
-            }
-
-            boardResponseDTO.setImageObj(imageObj);
         }
 
         return boardResponseDTO;
