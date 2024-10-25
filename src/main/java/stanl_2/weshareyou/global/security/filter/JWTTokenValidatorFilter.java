@@ -69,6 +69,7 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
                 path.equals("/api/v1/member") ||
                 path.startsWith("/api/v1/member/sms") ||  // 와일드카드 경로 포함
                 path.startsWith("/api/v1/member/mail") ||
+                path.equals("/api/v1/member/otherprofile") ||
                 path.equals("/api/v1/member/password");
     }
 }

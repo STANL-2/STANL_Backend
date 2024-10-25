@@ -1,8 +1,9 @@
-package stanl_2.weshareyou.global.security.service.smtp;
+package stanl_2.weshareyou.global.api.smtp;
 
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -10,11 +11,11 @@ import org.thymeleaf.TemplateEngine;
 import org.thymeleaf.context.Context;
 import org.thymeleaf.templatemode.TemplateMode;
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver;
-import stanl_2.weshareyou.global.security.service.redis.RedisService;
+import stanl_2.weshareyou.global.api.redis.RedisService;
 
 import java.security.SecureRandom;
 
-
+@Slf4j
 @Service(value = "MailService")
 @RequiredArgsConstructor
 public class MailServiceImpl implements MailService {
