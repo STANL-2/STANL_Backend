@@ -1,6 +1,7 @@
 package stanl_2.weshareyou.domain.board.service;
 
 import lombok.extern.slf4j.Slf4j;
+import org.jetbrains.annotations.NotNull;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -43,7 +44,6 @@ public class BoardServiceImpl implements BoardService{
     private final ModelMapper modelMapper;
     private final MemberRepository memberRepository;
     private final BoardCommentRepository boardCommentRepository;
-    private final S3uploader s3uploader;
     private final BoardImageRepository boardImageRepository;
     private final BoardImageService boardImageService;
     private Timestamp getCurrentTimestamp() {
@@ -54,13 +54,11 @@ public class BoardServiceImpl implements BoardService{
     @Autowired
     public BoardServiceImpl(BoardRepository boardRepository, ModelMapper modelMapper,
                             MemberRepository memberRepository, BoardCommentRepository boardCommentRepository,
-                            S3uploader s3uploader, BoardImageRepository boardImageRepository,
-                            BoardImageService boardImageService) {
+                            BoardImageRepository boardImageRepository, BoardImageService boardImageService) {
         this.boardRepository = boardRepository;
         this.modelMapper = modelMapper;
         this.memberRepository = memberRepository;
         this.boardCommentRepository = boardCommentRepository;
-        this.s3uploader = s3uploader;
         this.boardImageRepository = boardImageRepository;
         this.boardImageService = boardImageService;
     }
@@ -69,9 +67,8 @@ public class BoardServiceImpl implements BoardService{
     @Transactional
     public BoardDTO createBoard(BoardDTO boardDTO) {
         Timestamp currentTimestamp = getCurrentTimestamp();
-        Long memberId = boardDTO.getMemberId();
 
-        Member member = memberRepository.findById(memberId)
+        Member member = memberRepository.findById(boardDTO.getMemberId())
                 .orElseThrow(() -> new CommonException(ErrorCode.MEMBER_NOT_FOUND));
 
         Board board = new Board();
@@ -87,27 +84,17 @@ public class BoardServiceImpl implements BoardService{
 
         boardRepository.save(board);
 
-        List<BoardImage> images = s3uploader.uploadImg(boardDTO.getFile());
-
-        for(BoardImage image: images){
-            image.setBoard(board);
-            boardImageRepository.save(image);
-        }
-
-        List<BoardImage> savedImages = boardImageRepository.findAllByBoardId(board.getId());
-
-        List<BoardImageDTO> imageObj = new ArrayList<>();
-
-        for (BoardImage image : savedImages) {
-            BoardImageDTO imageDTO = new BoardImageDTO(image.getId(), image.getImageUrl(), image.getName());
-            imageObj.add(imageDTO);
-        }
-
         BoardDTO boardResponseDTO = new BoardDTO();
-        boardResponseDTO.setImageObj(imageObj);
         boardResponseDTO.setTitle(board.getTitle());
         boardResponseDTO.setContent(board.getContent());
         boardResponseDTO.setTag(board.getTag());
+
+        List<MultipartFile> files = boardDTO.getFile();
+
+        if(files != null && !files.isEmpty()) {
+            List<BoardImageDTO> imageObj = boardImageService.uploadImages(files, board);
+            boardResponseDTO.setImageObj(imageObj);
+        }
 
         return boardResponseDTO;
     }
@@ -120,7 +107,6 @@ public class BoardServiceImpl implements BoardService{
 
         List<Long> deletedFileIds = boardDTO.getDeleteIds();
 
-        // 삭제할 이미지 처리 (여러 개 삭제 가능)
         if (deletedFileIds != null && !deletedFileIds.isEmpty()) {
             boardImageService.updateImages(deletedFileIds);
         }
@@ -135,30 +121,22 @@ public class BoardServiceImpl implements BoardService{
 
         boardRepository.save(board);
 
+        BoardDTO boardResponseDTO = modelMapper.map(board, BoardDTO.class);
+
         List<MultipartFile> files = boardDTO.getFile();
 
-        List<BoardImageDTO> imageObj = new ArrayList<>();
-
-        // 추가할 이미지 처리 (여러 개 추가 기능)
         if(files != null && !files.isEmpty()) {
+            List<BoardImageDTO> imageObj = boardImageService.uploadImages(files, board);
+            boardResponseDTO.setImageObj(imageObj);
+        } else {
+            List<BoardImageDTO> imageObj = boardImageService.readImages(board);
 
-            List<BoardImage> images = s3uploader.uploadImg(files);
-
-            for(BoardImage image: images){
-                image.setBoard(board);
-                boardImageRepository.save(image);
+            if(imageObj == null || imageObj.isEmpty()){
+                throw new CommonException(ErrorCode.IMAGE_NOT_FOUND);
             }
 
-            List<BoardImage> savedImages = boardImageRepository.findAllByBoardId(board.getId());
-
-            for (BoardImage image : savedImages) {
-                BoardImageDTO imageDTO = new BoardImageDTO(image.getId(), image.getImageUrl(), image.getName());
-                imageObj.add(imageDTO);
-            }
+            boardResponseDTO.setImageObj(imageObj);
         }
-
-        BoardDTO boardResponseDTO = modelMapper.map(board, BoardDTO.class);
-        boardResponseDTO.setImageObj(imageObj);
 
         return boardResponseDTO;
     }

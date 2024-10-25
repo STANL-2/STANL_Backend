@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.lang.Nullable;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import stanl_2.weshareyou.domain.board.aggregate.dto.BoardDTO;
@@ -33,29 +34,6 @@ public class BoardController {
         this.modelMapper = modelMapper;
     }
 
-    /**
-     * 내용: 게시글 생성
-     * req:
-     * {
-     *     "title": "가이드 해드립니다.",
-     *     "content": "안녕하세요, 가이드 5년차 홍길동입니다. 가이드가 필요하신분 연락주세요",
-     *     "imageUrl": "image1",
-     *     "tag": "GUIDE",
-     *     "memberId": 1
-     * }
-     * res:
-     * {
-     *     "success": true,
-     *     "result": {
-     *         "title": "가이드 해드립니다.",
-     *         "content": "안녕",
-     *         "imageUrl": "image1",
-     *         "tag": "GUIDE",
-     *         "memberId": 1
-     *     },
-     *     "error": null
-     * }
-     */
     @PostMapping("")
     public ApiResponse<?> createBoard(@RequestAttribute("id") Long memberId,
                                       @RequestPart("vo") BoardCreateRequestVO boardCreateRequestVO,
@@ -74,39 +52,16 @@ public class BoardController {
         String formattedContent = boardResponseDTO.getContent().replace("\n", "\\n");
         boardResponseDTO.setContent(formattedContent);
 
-
         BoardCreateResponseVO boardCreateResponseVO = modelMapper.map(boardResponseDTO, BoardCreateResponseVO.class);
 
         return ApiResponse.ok(boardCreateResponseVO);
     }
 
-    /**
-     * 내용: 게시글 내용 수정
-     * req:
-     * {
-     *     "id": 4,
-     *     "title": "guide",
-     *     "imageUrl": "image5",
-     *     "memberId": 1
-     * }
-     * res:
-     * {
-     *     "success": true,
-     *     "result": {
-     *         "title": "guide",
-     *         "content": "안녕하세요, 가이드 5년차 홍길동입니다. 가이드가 필요하신분 연락주세요",
-     *         "imageUrl": "image5",
-     *         "tag": "GUIDE",
-     *         "memberId": 1
-     *     },
-     *     "error": null
-     * }
-     */
     @PutMapping("")
     public ApiResponse<?> updateBoard(@RequestAttribute("id") Long memberId,
                                       @RequestPart("vo") BoardUpdateRequestVO boardUpdateRequestVO,
-                                      @RequestPart("newFiles") List<MultipartFile> files,
-                                      @RequestPart("deletedFileIds") List<Long> deleteIds) {
+                                      @RequestPart("newFiles") @Nullable List<MultipartFile> files,
+                                      @RequestPart("deletedFileIds") @Nullable List<Long> deleteIds) {
 
         BoardDTO boardDTO = modelMapper.map(boardUpdateRequestVO, BoardDTO.class);
 
@@ -129,23 +84,6 @@ public class BoardController {
         return ApiResponse.ok(boardUpdateResponseVO);
     }
 
-    /**
-     * 내용: 게시글 삭제
-     * req:
-     * {
-     *     "id": 4,
-     *     "memberId": 1
-     * }
-     * res:
-     *{
-     *     "success": true,
-     *     "result": {
-     *         "id": 4,
-     *         "active": false
-     *     },
-     *     "error": null
-     * }
-     */
     @DeleteMapping("")
     public ApiResponse<?> deleteBoard(@RequestAttribute("id") Long memberId,
                                       @RequestBody BoardDeleteRequestVO boardDeleteRequestVO){
@@ -159,31 +97,6 @@ public class BoardController {
 
         return ApiResponse.ok(boardDeleteResponseVO);
     }
-
-    /**
-     * 내용: 게시글 상세조회
-     * req: X
-     * res: {
-     *     "success": true,
-     *     "result": {
-     *         "imageUrl": "image1",
-     *         "content": "A detailed guide to traveling in Paris.",
-     *         "likesCount": 0,
-     *         "memberProfileUrl": null,
-     *         "memberNickname": "userone",
-     *         "comment": [
-     *             {
-     *                 "content": "string",
-     *                 "createdAt": "2024-10-11T15:54:42.000+00:00",
-     *                 "updatedAt": "2024-10-11T15:54:42.907+00:00",
-     *                 "memberNickname": null,
-     *                 "boardId": null
-     *             } , ...
-     *         ]
-     *     },
-     *     "error": null
-     * }
-     */
 
     @GetMapping("/detail/{id}")
     public ApiResponse<?> readDetailBoard(@PathVariable Long id){
