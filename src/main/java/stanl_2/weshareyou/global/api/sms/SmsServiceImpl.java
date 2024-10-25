@@ -1,9 +1,9 @@
-package stanl_2.weshareyou.global.security.service.sms;
+package stanl_2.weshareyou.global.api.sms;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-import stanl_2.weshareyou.global.security.service.redis.RedisService;
+import stanl_2.weshareyou.global.api.redis.RedisService;
 
 @Slf4j
 @Service(value = "SmsService")
@@ -19,5 +19,11 @@ public class SmsServiceImpl implements SmsService{
         }
 
         return codeFoundBySms.equals(code);
+    }
+
+
+    @Override
+    public void deleteKey(String phone) {
+        redisService.deleteData(phone);
     }
 }

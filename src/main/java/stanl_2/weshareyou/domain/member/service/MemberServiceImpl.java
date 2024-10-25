@@ -269,7 +269,9 @@ public class MemberServiceImpl implements MemberService {
     @Override
     @Transactional
     public MemberDTO findId(MemberDTO requestMemberDTO) {
-        MemberDTO responseMemberDTO = getMemberDTO(requestMemberDTO);
+        Member findMember = memberRepository.findByName(requestMemberDTO.getName());
+
+        MemberDTO responseMemberDTO = modelMapper.map(findMember, MemberDTO.class);
 
         return responseMemberDTO;
     }

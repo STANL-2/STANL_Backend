@@ -28,7 +28,7 @@ public enum ErrorCode {
     PRODUCT_IS_NOT_RETURN(40012, HttpStatus.BAD_REQUEST, "물품 반납에 실패하였습니다."),
     VALIDATION_FAIL(40013, HttpStatus.BAD_REQUEST, "유효성 검사 실패"),
     SMS_SEND_FAILURE(40014, HttpStatus.BAD_REQUEST, "문자 전송 실패"),
-    BAD_REQUEST_IMAGE(40015, HttpStatus.BAD_REQUEST, "잘못된 JSON 형식입니다."),
+    BAD_REQUEST_IMAGE(40015, HttpStatus.BAD_REQUEST, "잘못된 Image 형식입니다."),
 
 
     /**
@@ -71,6 +71,7 @@ public enum ErrorCode {
     NOT_FOUND_JWT_TOKEN(40410, HttpStatus.NOT_FOUND, "JWT 토큰이 없습니다."),
     COMMENT_NOT_FOUND(40411, HttpStatus.NOT_FOUND, "해당 댓글을 찾을 수 없습니다."),
     ALARM_NOT_FOUND(40412, HttpStatus.NOT_FOUND, "해당 알림을 찾을 수 없습니다."),
+    IMAGE_NOT_FOUND(40413, HttpStatus.NOT_FOUND, "이미지를 찾을 수 없습니다."),
   
     /**
      * 500(Internal Server Error)

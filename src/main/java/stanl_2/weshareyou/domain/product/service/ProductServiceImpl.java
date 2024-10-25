@@ -85,8 +85,8 @@ public class ProductServiceImpl implements ProductService {
         product.setTitle(productDTO.getTitle());
         product.setContent(productDTO.getContent());
         product.setCategory(productDTO.getCategory());
-        product.setStartAt(productDTO.getStartAt());
-        product.setEndAt(productDTO.getEndAt());
+        product.setStartAt(currentTimestamp);
+        product.setEndAt(currentTimestamp);
         product.setStatus(productDTO.getStatus());
         product.setAdminId(member);
         product.setCreatedAt(currentTimestamp);
@@ -159,39 +159,6 @@ public class ProductServiceImpl implements ProductService {
 
         return productResponseDTO;
     }
-
-    // 나중에 삭제예정
-//    @Override
-//    @Transactional
-//    public CursorDTO readAllProductList(CursorDTO cursorDTO) {
-//
-//        Pageable pageable = PageRequest.of(0, cursorDTO.getSize());
-//        Slice<Product> productList;
-//
-//        if (cursorDTO.getCursorId() == null) {
-//            productList = productRepository.findAllProductsOrderedByCreatedAt(pageable);
-//        } else {
-//            productList = productRepository.findByIdLessThanOrderByCreatedAtDesc(cursorDTO.getCursorId(), pageable);
-//        }
-//
-//        Long lastProductId = productList.getContent().isEmpty() ? null :
-//                productList.getContent().get(productList.getNumberOfElements() - 1).getId();
-//
-//        if (productList.isEmpty()) {
-//            throw new CommonException(ErrorCode.PRODUCT_NOT_FOUND);
-//        } else {
-//            List<ProductDTO> productDTOList = productList.stream()
-//                    .map(this::toProductDTO)
-//                    .collect(Collectors.toList());
-//
-//            CursorDTO cursorResponseDTO = new CursorDTO();
-//            cursorResponseDTO.setCursorId(lastProductId);
-//            cursorResponseDTO.setHasNext(productList.hasNext());
-//            cursorResponseDTO.setComment(productDTOList);
-//
-//            return cursorResponseDTO;
-//        }
-//    }
 
     @Override
     @Transactional

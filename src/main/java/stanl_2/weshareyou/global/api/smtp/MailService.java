@@ -1,4 +1,4 @@
-package stanl_2.weshareyou.global.security.service.smtp;
+package stanl_2.weshareyou.global.api.smtp;
 
 
 import jakarta.mail.MessagingException;

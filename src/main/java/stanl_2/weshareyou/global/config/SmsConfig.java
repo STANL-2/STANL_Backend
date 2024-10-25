@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import stanl_2.weshareyou.global.common.dto.SmsDTO;
 import stanl_2.weshareyou.global.common.exception.CommonException;
 import stanl_2.weshareyou.global.common.exception.ErrorCode;
-import stanl_2.weshareyou.global.security.service.redis.RedisService;
+import stanl_2.weshareyou.global.api.redis.RedisService;
 
 import java.security.SecureRandom;
 
