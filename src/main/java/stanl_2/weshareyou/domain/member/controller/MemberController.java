@@ -173,7 +173,6 @@ public class MemberController {
     @DeleteMapping("/active")
     public ApiResponse<?> resign(@RequestAttribute("id") Long id){
 
-        log.info("id : {}", id);
         memberService.deleteMember(id);
 
         return ApiResponse.ok("회원 탈퇴에 성공했습니다.");
