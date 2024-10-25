@@ -1,4 +1,4 @@
-package stanl_2.weshareyou.global.security.service.redis;
+package stanl_2.weshareyou.global.api.redis;
 
 public interface RedisService {
     /* key-value 값 가져오는 메소드 */
