@@ -26,8 +26,8 @@ import stanl_2.weshareyou.global.common.exception.CommonException;
 import stanl_2.weshareyou.global.common.exception.ErrorCode;
 import stanl_2.weshareyou.global.common.response.ApiResponse;
 import stanl_2.weshareyou.global.config.SmsConfig;
-import stanl_2.weshareyou.global.security.service.sms.SmsService;
-import stanl_2.weshareyou.global.security.service.smtp.MailService;
+import stanl_2.weshareyou.global.api.sms.SmsService;
+import stanl_2.weshareyou.global.api.smtp.MailService;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -170,7 +170,7 @@ public class MemberController {
      * JWT 토큰의 pk 값으로 회원 비활성화
      * member_active -> false(0)
      */
-    @DeleteMapping("")
+    @DeleteMapping("/active")
     public ApiResponse<?> resign(@RequestAttribute("id") Long id){
 
         memberService.deleteMember(id);
@@ -336,6 +336,7 @@ public class MemberController {
         if(!smsService.verifySmsCode(checkSmsCodeRequestVO.getPhone(), checkSmsCodeRequestVO.getCode())) {
             throw new CommonException(ErrorCode.SMS_VERIFY_FAIL);
         }else{
+            smsService.deleteKey(checkSmsCodeRequestVO.getPhone());
             return ApiResponse.ok("SMS 인증 성공!");
         }
     }
@@ -352,10 +353,10 @@ public class MemberController {
      * }
      */
     @GetMapping("")
-    public ApiResponse<?> findId(@RequestAttribute("id") Long id){
+    public ApiResponse<?> findId(@RequestBody FindIdRequestVO findIdRequestVO){
 
         MemberDTO requestMemberDTO = new MemberDTO();
-        requestMemberDTO.setId(id);
+        requestMemberDTO.setName(findIdRequestVO.getName());
 
         MemberDTO responseMemberDTO = memberService.findId(requestMemberDTO);
 

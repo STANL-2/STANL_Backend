@@ -19,6 +19,8 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     Optional<Member> findByNickname(String nickname);
 
+    Member findByName(String name);
+
     @Query("SELECT m.profileUrl FROM Member m WHERE m.nickname = :nickname")
     String findProfileUrlByNickname(@Param("nickname") String nickname);
 }
